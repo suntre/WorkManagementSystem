@@ -27,7 +27,7 @@ namespace WorkManagementSystem.Controllers
             var result = _taskService.GetTasks();
             if(result.Count() == 0)
             {
-                return StatusCode(204);
+                return NotFound("Tasks not found");
             }
             return Ok(result);
         }
@@ -37,7 +37,7 @@ namespace WorkManagementSystem.Controllers
         public ActionResult<TaskDTO> GetTask(int id)
         {
             var result = _taskService.GetTask(id);
-            if (result == null) return BadRequest("Task with given id didn't exists");
+            if (result == null) return NotFound("Task with given id didn't exists");
             return Ok(result);
         }
 
@@ -46,7 +46,7 @@ namespace WorkManagementSystem.Controllers
         public ActionResult<WorkerDTO> GetWorkerTask(int workerId)
         {
             var result = _taskService.GetWorkerTask(workerId);
-            if (result.tasks.Count() == 0) return StatusCode(204);
+            if (result.tasks.Count() == 0) return NotFound("Worker haven't got any task");
             return Ok(result);
         }
 
@@ -66,7 +66,7 @@ namespace WorkManagementSystem.Controllers
         public ActionResult DeleteTask(int id)
         {
             var result = _taskService.DeleteTask(id);
-            if(result == -1) return BadRequest();
+            if(result == -1) return NotFound("Task with given id didn't exist");
             return StatusCode(204);
         }
 
@@ -99,7 +99,7 @@ namespace WorkManagementSystem.Controllers
             }
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            
+            if(task.endDate != null && task.startDate > task.endDate) return BadRequest("Finish date can't be earlier than start date");
             _taskService.UpdateTask(task);
             return StatusCode(204);
         }

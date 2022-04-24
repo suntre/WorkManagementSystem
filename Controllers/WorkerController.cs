@@ -23,7 +23,7 @@ namespace WorkManagementSystem.Controllers
         public ActionResult<IEnumerable<WorkerListDTO>> GetWorkers()
         {
             var workers = _workerService.GetWorkers();
-            if (workers.Count() == 0) return NoContent();
+            if (workers.Count() == 0) return NotFound();
             return Ok(workers);
         }
         [HttpGet]
@@ -33,7 +33,7 @@ namespace WorkManagementSystem.Controllers
             if(id < 0) return BadRequest("Id must be higher or equal to one");
             var worker = _workerService.GetWorkerById(id);
             if(worker != null) return Ok(worker);
-            return BadRequest("User not found");
+            return NotFound("User not found");
         }
         [HttpGet]
         [Route("/workers/{roleName}")]
@@ -41,7 +41,7 @@ namespace WorkManagementSystem.Controllers
         {
             var workers = _workerService.GetByRole(roleName);
             if (workers == null) return BadRequest("Invalid role name.");
-            if(workers.Count() == 0) return BadRequest("No workers found with given role");
+            if(workers.Count() == 0) return NotFound("No workers found with given role");
             return Ok(workers);
         }
         
@@ -64,7 +64,7 @@ namespace WorkManagementSystem.Controllers
         {
             if (id < 1) return BadRequest("ID  must be higher or equals to one");
             int result = _workerService.DeleteWorker(id);
-            if (result == -1) return BadRequest("Worker not found");
+            if (result == -1) return NotFound("Worker not found");
             return Ok();
         }
         [HttpPost]
