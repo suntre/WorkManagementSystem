@@ -36,6 +36,7 @@ namespace WorkManagementSystem.Controllers
         [Route("{id}")]
         public ActionResult<TaskDTO> GetTask(int id)
         {
+            if (id < 1) return BadRequest("ID must be higher or equal to 1");
             var result = _taskService.GetTask(id);
             if (result == null) return NotFound("Task with given id didn't exists");
             return Ok(result);
@@ -46,13 +47,15 @@ namespace WorkManagementSystem.Controllers
         public ActionResult<WorkerDTO> GetWorkerTask(int workerId)
         {
             var result = _taskService.GetWorkerTask(workerId);
-            if (result.tasks.Count() == 0) return NotFound("Worker haven't got any task");
+            if (result == null) return NotFound("Worker with given ID not found");
+            if (result.tasks == null) return NotFound("Worker haven't got any task");
             return Ok(result);
         }
 
         [HttpPost]
         public ActionResult CreateTask(CreateTaskDTO task)
         {
+            if (task.title == null) return BadRequest("Title cannot be empty");
             task.workerId = int.Parse(HttpContext.User.Claims.Where(c => c.Type.Contains("nameidentifier")).First().Value.ToString());
             if (!ModelState.IsValid) return BadRequest(ModelState);
             int id = _taskService.CreateTask(task);
@@ -67,7 +70,7 @@ namespace WorkManagementSystem.Controllers
         {
             var result = _taskService.DeleteTask(id);
             if(result == -1) return NotFound("Task with given id didn't exist");
-            return StatusCode(204);
+            return NoContent();
         }
 
         [HttpPost]
@@ -81,9 +84,9 @@ namespace WorkManagementSystem.Controllers
             {
                 task.endDate = DateTime.Now;
                 _taskService.UpdateTask(task);
-                return StatusCode(204);
+                return NoContent();
             }
-            return BadRequest();
+            return BadRequest("Cannot end task which has asigned end date");
         }
 
         [HttpPost]
@@ -101,7 +104,7 @@ namespace WorkManagementSystem.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             if(task.endDate != null && task.startDate > task.endDate) return BadRequest("Finish date can't be earlier than start date");
             _taskService.UpdateTask(task);
-            return StatusCode(204);
+            return NoContent();
         }
     }
 }

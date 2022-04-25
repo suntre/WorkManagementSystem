@@ -47,7 +47,6 @@ namespace WorkManagementSystem.Services
             return worker;
         }
 
-        //Create Service
         public int CreateTask(CreateTaskDTO task)
         {
             var currentTask = _dbcontext.Task.FirstOrDefault(t => t.worker.id == task.workerId && t.endDate == null);

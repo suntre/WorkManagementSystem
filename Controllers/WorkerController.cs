@@ -23,7 +23,7 @@ namespace WorkManagementSystem.Controllers
         public ActionResult<IEnumerable<WorkerListDTO>> GetWorkers()
         {
             var workers = _workerService.GetWorkers();
-            if (workers.Count() == 0) return NotFound();
+            if (workers.Count() == 0) return NotFound("Workers not found");
             return Ok(workers);
         }
         [HttpGet]
@@ -40,7 +40,7 @@ namespace WorkManagementSystem.Controllers
         public ActionResult<IEnumerable<WorkerListDTO>> GetWorkerByRole(string roleName)
         {
             var workers = _workerService.GetByRole(roleName);
-            if (workers == null) return BadRequest("Invalid role name.");
+            if (workers == null) return BadRequest("Invalid role name");
             if(workers.Count() == 0) return NotFound("No workers found with given role");
             return Ok(workers);
         }
@@ -65,7 +65,7 @@ namespace WorkManagementSystem.Controllers
             if (id < 1) return BadRequest("ID  must be higher or equals to one");
             int result = _workerService.DeleteWorker(id);
             if (result == -1) return NotFound("Worker not found");
-            return Ok();
+            return NoContent();
         }
         [HttpPost]
         [Route("update")]
@@ -74,7 +74,7 @@ namespace WorkManagementSystem.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             _workerService.UpdateWorker(worker);
-            return Ok();
+            return NoContent();
         }
 
         [HttpPost]
@@ -86,7 +86,7 @@ namespace WorkManagementSystem.Controllers
             if (user.password == null) return BadRequest("Password need to be fullfilled");
             if (user.login == null) return BadRequest("Login need to be fullfilled");
             var result = _workerService.Login(user);
-            if (result == string.Empty) return BadRequest("Wrong username or password.");
+            if (result == string.Empty) return BadRequest("Wrong username or password");
             return Ok(result);
 
         }

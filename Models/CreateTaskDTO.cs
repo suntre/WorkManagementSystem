@@ -10,7 +10,7 @@ namespace WorkManagementSystem.Models
         public string? description { get; set; }
         public DateTime? startDate { get; set; }
         public DateTime? endDate { get; set; }
-        public int? workerId { get; set; }
+        public int workerId { get; set; }
 
 
     }

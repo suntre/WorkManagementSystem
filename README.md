@@ -4,7 +4,7 @@ Work Management System is REST api created with purpose to manage current and pr
 # Technologies
 Api has been created using .NET 6 with Entity Framework, based on MsSQL localdb. 
 For manual testing Swagger and Postman.
-Automation Tests using XUnit (To be done).
+Automation Tests using XUnit with AutoMoq, Fluent Assertions and Auto Fixture.
 Authentication done with JWT.
 
 # Working
